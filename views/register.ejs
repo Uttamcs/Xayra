@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Bagistry</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 flex items-center justify-center min-h-screen px-4">
+
+  <div class="w-full max-w-sm space-y-4">
+    <!-- Flash Messages -->
+    <% if (success.length > 0) { %>
+      <div class="flash-msg bg-green-600 text-white text-sm font-medium px-4 py-2 rounded shadow-md">
+        <%= success %>
+      </div>
+    <% } %>
+
+    <% if (error.length > 0) { %>
+      <div class="flash-msg bg-red-600 text-white text-sm font-medium px-4 py-2 rounded shadow-md">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <!-- Register Card -->
+    <div class="bg-white rounded-lg shadow-xl p-6 space-y-5">
+      <div class="text-center">
+        <h1 class="text-2xl font-bold text-blue-700">Welcome to Bagistry</h1>
+        <p class="text-sm text-gray-500">Create your account</p>
+      </div>
+
+      <form action="/users/register" method="POST" class="space-y-4">
+        <div>
+          <label for="Fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
+          <input type="text" name="Fullname" id="Fullname" required
+            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div>
+          <label for="Email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" name="Email" id="Email" required
+            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div>
+          <label for="Password" class="block text-sm font-medium text-gray-700">Password</label>
+          <input type="password" name="Password" id="Password" required
+            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <button type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition">
+          Register
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-gray-600">
+        Already have an account?
+        <a href="/users/login" class="text-blue-600 hover:underline">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.flash-msg').forEach(msg => {
+        msg.style.opacity = '0';
+        msg.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => msg.remove(), 500);
+      });
+    }, 3000);
+  </script>
+</body>
+
+</html>

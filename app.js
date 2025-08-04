@@ -6,6 +6,20 @@ const db = require('./config/mongoose-connection');
 const usersRouter = require('./routes/usersRouter');
 const ownersRouter = require('./routes/ownersRouter');
 const productsRouter = require('./routes/productsRouter');
+const session = require("express-session");
+const flash = require("connect-flash");
+
+app.use(
+  session({
+    secret: "your_secret_key", 
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(flash());
+
+
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -15,7 +29,7 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
-  res.send('home');
+  res.render('index', {error:""});
 });
 
 app.use('/users', usersRouter);

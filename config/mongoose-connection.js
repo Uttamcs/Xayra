@@ -1,13 +1,18 @@
 const mongoose = require("mongoose");
+const dbgr = require("debug")("development:mongoose");
+const config = require("config");
 
-mongoose.connect("mongodb://localhost:27017/Bagistry", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(function(){
-    console.log("Database connected");
-}).catch(function(err){
-    console.log(err);
-});
+mongoose
+  .connect(`${config.get("MONGODB_URI")}Bagistry`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(function () {
+    dbgr("Database connected");
+  })
+  .catch(function (err) {
+    dbgr(err);
+  });
 
 
 module.exports = mongoose.connection;
