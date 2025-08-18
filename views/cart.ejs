@@ -1,46 +1,182 @@
-<%- include('./partials/header') %>
-    <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
-        <div class="w-[30%] rounded-md overflow-hidden">
-            <div class="w-full h-80 bg-yellow-500"></div>
-            <div class="w-full flex justify-between px-5 py-4">
-                <h3 class="text-2xl">Clinge Bag</h3>
-                <div class="flex items-center gap-2">
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line"></i>
-                    <div class="px-2 py-1 rounded-md bg-white text-black">01</div>
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line"></i>
-                </div>
-            </div>
-            <div class="flex items-center justify-between px-5 py-3">
-                <h4 class="text-lg">Net Total</h4>
-                <h2 class="text-lg">₹ 1200</h2>
-            </div>
-        </div>
-        <div class="w-[70%]">
-            <h3 class="text-xl">Price Breakdown</h3>
-            <div class="px-10 mt-5">
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Total MRP</h4>
-                    <h4>₹ 1920</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Discount on MRP</h4>
-                    <h4>₹ 0</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Platform Fee</h4>
-                    <h4>₹ 20</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Shipping Fee</h4>
-                    <h4>FREE</h4>
-                </div>
-            </div>
-            <div class="w-full h-[1px] bg-black mt-10"></div>
-            <div class="flex mt-5">
-                <h3 class="w-1/3 text-xl">Total Amount</h3>
-                <h3 class="font-semibold text-xl text-green-600">₹ 1940</h3>
-            </div>
-            <form action=""></form>
-        </div>
+<%- include("./partials/header") %>
+
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+      <p class="text-gray-600 mt-2">Review your items before checkout</p>
     </div>
-    <%- include('./partials/footer') %>
+
+    <% if (cart && cart.length > 0) { %>
+      <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+        
+        <!-- Cart Items -->
+        <div class="lg:col-span-8">
+          <div class="card overflow-hidden">
+            <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+              <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                <i class="ri-shopping-cart-line mr-3 text-indigo-600"></i>
+                Items in your cart
+              </h2>
+            </div>
+            
+            <div class="divide-y divide-gray-200">
+              <% cart.forEach((item, index) => { %>
+                <div class="cart-item">
+                  <div class="flex items-start space-x-6">
+                    
+                    <!-- Product Image -->
+                    <div class="flex-shrink-0">
+                      <% if (item.product.image) { %>
+                        <img src="data:image/jpeg;base64,<%= item.product.image.toString('base64') %>" 
+                             alt="<%= item.product.name %>" 
+                             class="w-20 h-20 object-cover rounded-lg border border-gray-200" />
+                      <% } else { %>
+                        <div class="w-20 h-20 bg-gray-200 rounded-lg border border-gray-200 flex items-center justify-center">
+                          <i class="ri-image-line text-gray-400 text-2xl"></i>
+                        </div>
+                      <% } %>
+                    </div>
+                    
+                    <!-- Product Details -->
+                    <div class="flex-1 min-w-0">
+                      <h3 class="text-lg font-medium text-gray-900 truncate">
+                        <%= item.product.name %>
+                      </h3>
+                      <% if (item.product.brand) { %>
+                        <p class="text-sm text-gray-500 mt-1"><%= item.product.brand %></p>
+                      <% } %>
+                      <% if (item.product.color) { %>
+                        <p class="text-sm text-gray-500">Color: <%= item.product.color %></p>
+                      <% } %>
+                      
+                      <!-- Price -->
+                      <div class="mt-2">
+                        <span class="text-xl font-bold text-indigo-600">
+                          ₹ <%= item.product.price - (item.product.price * (item.product.discount || 0) / 100) %>
+                        </span>
+                        <% if (item.product.discount > 0) { %>
+                          <span class="text-sm text-gray-500 line-through ml-2">
+                            ₹ <%= item.product.price %>
+                          </span>
+                        <% } %>
+                      </div>
+                    </div>
+                    
+                    <!-- Quantity & Actions -->
+                    <div class="flex flex-col items-end space-y-3">
+                      
+                      <!-- Quantity Controls -->
+                      <div class="quantity-control">
+                        <form method="POST" action="/users/cart/update/<%= item.product._id %>" style="display: inline;">
+                          <input type="hidden" name="quantity" value="<%= Math.max(1, (item.quantity || 1) - 1) %>">
+                          <button type="submit" <% if ((item.quantity || 1) <= 1) { %>disabled<% } %> 
+                                  class="quantity-btn <% if ((item.quantity || 1) <= 1) { %>opacity-50 cursor-not-allowed<% } %>">
+                            <i class="ri-subtract-line"></i>
+                          </button>
+                        </form>
+                        <span class="w-12 text-center font-bold text-gray-900">
+                          <%= item.quantity || 1 %>
+                        </span>
+                        <form method="POST" action="/users/cart/update/<%= item.product._id %>" style="display: inline;">
+                          <input type="hidden" name="quantity" value="<%= (item.quantity || 1) + 1 %>">
+                          <button type="submit" class="quantity-btn">
+                            <i class="ri-add-line"></i>
+                          </button>
+                        </form>
+                      </div>
+                      
+                      <!-- Remove Button -->
+                      <form method="POST" action="/users/cart/remove/<%= item.product._id %>" style="display: inline;">
+                        <button type="submit" class="btn text-red-500 hover:text-red-700 hover:bg-red-50 text-sm px-3 py-2 border border-red-200 hover:border-red-300">
+                          <i class="ri-delete-bin-line mr-1"></i>Remove
+                        </button>
+                      </form>
+                      
+                      <!-- Item Total -->
+                      <div class="text-right">
+                        <p class="text-sm text-gray-500">Subtotal</p>
+                        <p class="text-lg font-semibold text-gray-900" id="subtotal-<%= item.product._id %>">
+                          ₹ <%= (item.product.price - (item.product.price * (item.product.discount || 0) / 100)) * (item.quantity || 1) %>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="lg:col-span-4 mt-8 lg:mt-0">
+          <div class="card-elevated p-8 sticky top-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <i class="ri-file-list-3-line mr-3 text-indigo-600"></i>
+              Order Summary
+            </h2>
+            
+            <div class="space-y-3">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Subtotal</span>
+                <span class="font-medium">
+                  ₹ <% 
+                    let subtotal = 0;
+                    if (cart && cart.length > 0) {
+                      cart.forEach(item => {
+                        subtotal += (item.product.price - (item.product.price * (item.product.discount || 0) / 100)) * (item.quantity || 1);
+                      });
+                    }
+                  %><%= subtotal.toFixed(2) %>
+                </span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Shipping</span>
+                <span class="font-medium text-green-600">Free</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Tax</span>
+                <span class="font-medium">₹ 0</span>
+              </div>
+              <div class="border-t border-gray-200 pt-3">
+                <div class="flex justify-between">
+                  <span class="text-lg font-semibold text-gray-900">Total</span>
+                  <span class="text-lg font-bold text-indigo-600">₹ <%= subtotal.toFixed(2) %></span>
+                </div>
+              </div>
+            </div>
+            
+            <a href="/checkout" class="btn btn-primary w-full py-4 text-lg mt-8">
+              <i class="ri-secure-payment-line mr-2"></i>
+              Proceed to Checkout
+            </a>
+            
+            <a href="/shop" class="btn btn-outline w-full py-3 mt-4">
+              <i class="ri-arrow-left-line mr-2"></i>
+              Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+      
+    <% } else { %>
+      <!-- Empty Cart -->
+      <div class="text-center py-20">
+        <div class="max-w-lg mx-auto">
+          <div class="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
+            <i class="ri-shopping-cart-line text-5xl text-indigo-600"></i>
+          </div>
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
+          <p class="text-xl text-gray-600 mb-10 leading-relaxed">Looks like you haven't added any items to your cart yet. Discover our amazing collection!</p>
+          <a href="/shop" class="btn btn-primary text-lg px-8 py-4">
+            <i class="ri-shopping-bag-line mr-2"></i>
+            Start Shopping
+          </a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+<%- include("./partials/footer") %>

@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
-    image: Buffer ,
+    image: Buffer,
+    brand: String,
+    color: String,
     name: String,
     price: Number,
     discount: {
         type: Number,
         default: 0
     },
-    bgColor: String, 
-    panelColor: String,
-    textColor: String,
 })
 
 

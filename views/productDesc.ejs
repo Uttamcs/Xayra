@@ -1,0 +1,55 @@
+<%- include('./partials/header') %>
+  <div class="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+    
+    <!-- Product Image -->
+    <div class="bg-white rounded-xl shadow p-4 flex items-center justify-center">
+      <img class="object-contain h-96 w-full rounded-lg"
+        src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>"/>
+    </div>
+
+    <!-- Product Info -->
+    <div class="flex flex-col gap-4">
+      <h1 class="text-2xl font-bold text-gray-800"><%= product.name %></h1>
+
+      <% if(product.brand) { %>
+        <p class="text-gray-500">Brand: <%= product.brand %></p>
+      <% } %>
+
+      <% if(product.color) { %>
+        <p class="text-gray-500">Color: <%= product.color %></p>
+      <% } %>
+
+      <div class="flex items-center gap-3">
+        <p class="text-2xl font-bold text-indigo-600">
+          ₹ <%= product.price - (product.price * product.discount / 100) %>
+        </p>
+        <% if(product.discount > 0) { %>
+          <p class="text-gray-500 line-through">₹ <%= product.price %></p>
+          <span class="bg-green-100 text-green-600 text-sm px-2 py-1 rounded-full">
+            <%= product.discount %>% OFF
+          </span>
+        <% } %>
+      </div>
+
+      <p class="text-gray-600">
+        <%= product.description || "No description available." %>
+      </p>
+
+      <!-- Buttons -->
+      <div class="flex gap-4 mt-6">
+        <form action="/cart/add/<%= product._id %>" method="POST">
+          <button class="px-6 py-3 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600">
+            Add to Cart
+          </button>
+        </form>
+
+        <form action="/checkout/<%= product._id %>" method="GET">
+          <button class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700">
+            Proceed to Payment
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <%- include('./partials/footer') %>

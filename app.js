@@ -6,6 +6,7 @@ const db = require('./config/mongoose-connection');
 const usersRouter = require('./routes/usersRouter');
 const ownersRouter = require('./routes/ownersRouter');
 const productsRouter = require('./routes/productsRouter');
+const indexRouter = require('./routes/indexRouter');
 const session = require("express-session");
 const flash = require("connect-flash");
 
@@ -17,21 +18,25 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.locals.loggedIn = !!req.session.user;
+  next();
+});
+
+
 app.use(flash());
 
 
 
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
 
-app.get('/', (req, res) => {
-  res.render('index', {error:""});
-});
-
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/owners', ownersRouter);
 app.use('/products', productsRouter);

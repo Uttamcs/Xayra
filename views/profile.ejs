@@ -1,0 +1,207 @@
+<%- include('./partials/header') %>
+
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">My Profile</h1>
+      <p class="text-gray-600 mt-2">Manage your account information</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+      <!-- Profile Info -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">Profile Information</h2>
+          <button onclick="toggleEdit()" id="editBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+            Edit Profile
+          </button>
+        </div>
+        
+        <!-- View Mode -->
+        <div id="viewMode" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+            <p class="text-lg text-gray-900"><%= users ? users.Fullname : 'N/A' %></p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <p class="text-lg text-gray-900"><%= users ? users.Email : 'N/A' %></p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+            <p class="text-lg text-gray-900"><%= users && users.Phone ? users.Phone : 'Not provided' %></p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Account Type</label>
+            <p class="text-lg text-gray-900"><%= users && users.isAdmin ? 'Admin' : 'Customer' %></p>
+          </div>
+        </div>
+        
+        <!-- Edit Mode -->
+        <form id="editMode" action="/profile/update" method="POST" class="hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+              <input type="text" name="fullname" value="<%= users ? users.Fullname : '' %>" required
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input type="email" name="email" value="<%= users ? users.Email : '' %>" required
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+              <input type="tel" name="phone" value="<%= users && users.Phone ? users.Phone : '' %>"
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+              <input type="password" name="currentPassword" placeholder="Required to change password"
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+              <input type="password" name="password" placeholder="Leave blank to keep current password"
+                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+          
+          <div class="flex gap-4">
+            <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              Save Changes
+            </button>
+            <button type="button" onclick="toggleEdit()" class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="border-t pt-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Orders</h2>
+        
+        <% if (users && users.orders && users.orders.length > 0) { %>
+          <div class="space-y-4" id="ordersContainer">
+            <% users.orders.slice(-3).reverse().forEach(order => { %>
+              <div class="p-4 bg-gray-50 rounded-lg order-item">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p class="font-semibold text-gray-900">Order #<%= order._id || 'N/A' %></p>
+                    <p class="text-sm text-gray-600">Status: <span class="text-indigo-600"><%= order.status || 'Completed' %></span></p>
+                  </div>
+                  <p class="text-sm text-gray-500"><%= order.date ? new Date(order.date).toLocaleDateString() : 'Recent' %></p>
+                </div>
+              </div>
+            <% }) %>
+            
+            <% users.orders.slice(0, -3).reverse().forEach(order => { %>
+              <div class="p-4 bg-gray-50 rounded-lg order-item hidden" data-hidden="true">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p class="font-semibold text-gray-900">Order #<%= order._id || 'N/A' %></p>
+                    <p class="text-sm text-gray-600">Status: <span class="text-indigo-600"><%= order.status || 'Completed' %></span></p>
+                  </div>
+                  <p class="text-sm text-gray-500"><%= order.date ? new Date(order.date).toLocaleDateString() : 'Recent' %></p>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+          
+          <% if (users.orders.length > 3) { %>
+            <div class="mt-4 text-center">
+              <button onclick="toggleOrders()" id="showMoreBtn" class="btn btn-outline">
+                Show More Orders
+              </button>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="text-center py-8">
+            <i class="ri-shopping-bag-line text-4xl text-gray-400 mb-2"></i>
+            <p class="text-gray-600">No orders yet</p>
+            <a href="/shop" class="text-indigo-600 hover:text-indigo-700 font-medium">Start Shopping</a>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="border-t pt-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <a href="/users/cart/<%= users && users._id ? users._id : '' %>" 
+             class="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+            <i class="ri-shopping-cart-line text-2xl text-indigo-600 mr-3"></i>
+            <div>
+              <h3 class="font-semibold text-gray-900">My Cart</h3>
+              <p class="text-sm text-gray-600">View cart items</p>
+            </div>
+          </a>
+          
+          <a href="/shop" 
+             class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+            <i class="ri-shopping-bag-line text-2xl text-green-600 mr-3"></i>
+            <div>
+              <h3 class="font-semibold text-gray-900">Shop</h3>
+              <p class="text-sm text-gray-600">Browse products</p>
+            </div>
+          </a>
+          
+          <form action="/users/logout" method="POST" class="block">
+            <button type="submit" 
+                    class="w-full flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors text-left">
+              <i class="ri-logout-box-line text-2xl text-red-600 mr-3"></i>
+              <div>
+                <h3 class="font-semibold text-gray-900">Logout</h3>
+                <p class="text-sm text-gray-600">Sign out of account</p>
+              </div>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleEdit() {
+    const viewMode = document.getElementById('viewMode');
+    const editMode = document.getElementById('editMode');
+    const editBtn = document.getElementById('editBtn');
+    
+    if (editMode.classList.contains('hidden')) {
+      viewMode.classList.add('hidden');
+      editMode.classList.remove('hidden');
+      editBtn.textContent = 'Cancel';
+    } else {
+      viewMode.classList.remove('hidden');
+      editMode.classList.add('hidden');
+      editBtn.textContent = 'Edit Profile';
+    }
+  }
+  
+  function toggleOrders() {
+    const hiddenOrders = document.querySelectorAll('[data-hidden="true"]');
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    
+    if (showMoreBtn.textContent.includes('Show More')) {
+      hiddenOrders.forEach(order => order.classList.remove('hidden'));
+      showMoreBtn.textContent = 'Show Less Orders';
+    } else {
+      hiddenOrders.forEach(order => order.classList.add('hidden'));
+      showMoreBtn.textContent = 'Show More Orders';
+    }
+  }
+</script>
+
+<%- include('./partials/footer') %>

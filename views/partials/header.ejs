@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bagistry</title>
+  <title>Xayra</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/modern-style.css">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -14,28 +16,54 @@
   </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 pt-20">
-  <nav class="w-full fixed top-0 left-0 z-50 bg-white shadow-md">
-    <div class="max-w-7xl mx-auto px-5 py-4 flex justify-between items-center">
-      
-      <div class="text-2xl font-bold text-blue-700 tracking-wide">
-        <a href="/">Bagistry</a>
+<body class="bg-gradient-to-r from-gray-400 to-gray-800  text-gray-800 pt-20 flex flex-col w-full justify-center items-center">
+  <nav class="navbar w-full fixed top-0 left-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+      <div class="navbar-brand">
+        <a href="/">Xayra</a>
       </div>
 
-      <ul class="hidden md:flex space-x-8 text-gray-700 font-medium">
-        <li><a href="/" class="hover:text-blue-600 transition duration-200">Home</a></li>
-        <li><a href="/shop" class="hover:text-blue-600 transition duration-200">Shop</a></li>
-        <li><a href="/about" class="hover:text-blue-600 transition duration-200">About</a></li>
-        <li><a href="/contact" class="hover:text-blue-600 transition duration-200">Contact</a></li>
+      <ul class="hidden md:flex space-x-8">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/shop" class="nav-link">Shop</a></li>
+        <li><a href="/about" class="nav-link">About</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
       </ul>
 
-      <div class="flex items-center gap-5 text-xl text-gray-700">
-        <a href="/cart" class="hover:text-blue-600"><i class="ri-shopping-cart-line"></i></a>
-        <a href="/users/login" class="hover:text-blue-600"><i class="ri-user-line"></i></a>
-      </div>
 
-      <div class="md:hidden text-2xl cursor-pointer">
-        <i class="ri-menu-line"></i>
-      </div>
+      <% if (loggedIn) { %>
+        <div class="flex items-center gap-4 text-xl">
+          <!-- Cart Icon -->
+          <a href="/users/cart/<%= users && users._id ? users._id : '' %>" class="nav-link relative p-2 rounded-lg hover:bg-gray-100 transition-all">
+            <i class="ri-shopping-cart-line"></i>
+            <% if (users && users.cart && users.cart.length > 0) { %>
+              <span class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow-lg">
+                <%= users.cart.length %>
+              </span>
+            <% } %>
+          </a>
+
+          <!-- Profile Icon -->
+          <a href="/profile" class="nav-link p-2 rounded-lg hover:bg-gray-100 transition-all">
+            <i class="ri-user-line"></i>
+          </a>
+
+          <!-- Logout Button -->
+          <form action="/users/logout" method="POST" class="inline">
+            <button type="submit" class="btn btn-outline text-sm px-4 py-2">
+              <i class="ri-logout-box-line mr-1"></i>
+              Logout
+            </button>
+          </form>
+        </div>
+      <% } else { %>
+        <div class="flex items-center gap-3">
+          <a href="/users/login" class="nav-link font-medium">Login</a>
+          <a href="/users/register" class="btn btn-primary text-sm px-4 py-2">
+            Get Started
+          </a>
+        </div>
+      <% } %>
     </div>
   </nav>

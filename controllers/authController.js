@@ -1,6 +1,9 @@
+const express = require("express");
+const router = express.Router();
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user-model");
 const generateToken = require("../utils/generateToken");
+
 
 
 let registerUser = async (req, res) => {
@@ -44,12 +47,13 @@ let loginUser = async (req, res) => {
             return res.status(400).send("No user found");
         }
         bcrypt.compare(Password, user.Password, function (err, result) {
-            if (err) return res.status(500).send("Something went wrong");
-            if (!result) return res.status(400).send("Invalid credentials");
-            const token = generateToken(user);
-            res.cookie("token", token);
-            req.flash("success", "Logged in successfully!");
-            res.redirect("/users/shop");
+          if (err) return res.status(500).send("Something went wrong");
+          if (!result) return res.status(400).send("Invalid credentials");
+          const token = generateToken(user);
+          res.cookie("token", token);
+          req.session.user = user; 
+          req.flash("success", "Logged in successfully!");
+          res.redirect("/shop");
         });
 
     }
@@ -59,16 +63,14 @@ let loginUser = async (req, res) => {
 }
 
 
-let logout = async (req, res) => {
-    try {
-        res.clearCookie("token");
-        req.flash("success", "Logged out successfully!");
-        res.redirect("/users/login");
-    }
-    catch (err) {
-        res.status(500).send(err.message);
-    }
-}
+let logout = (req, res) => {
+  res.clearCookie('token');
+  req.session.destroy((err) => {
+    if (err) return res.status(500).send("Logout failed.");
+    res.redirect('/users/login');
+  });
+};
+
 
 
 module.exports = {registerUser, loginUser, logout};

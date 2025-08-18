@@ -15,10 +15,16 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  cart: {
-    type: Array,
-    default: [],
-  },
+  cart: [{
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'product'
+    },
+    quantity: {
+      type: Number,
+      default: 1
+    }
+  }],
   picture: String,
 });
   

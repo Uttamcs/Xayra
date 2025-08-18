@@ -1,0 +1,131 @@
+<%- include('./partials/header') %>
+
+  <div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-orange-600 to-indigo-800 text-white py-20">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <h1 class="text-5xl font-bold mb-6">Contact Us</h1>
+        <p class="text-xl opacity-90 max-w-3xl mx-auto">
+          We'd love to hear from you. Send us a message and we'll respond as soon
+          as possible.
+        </p>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-12">
+          <!-- Contact Form -->
+          <div class="bg-white rounded-2xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              Send us a Message
+            </h2>
+            <form action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
+              <!-- Access Key -->
+              <input type="hidden" name="access_key" value="4f47b12a-7112-4b0d-a99b-1a7e847e0da7" />
+              <input type="hidden" name="subject" value="New Submission from Xayra" />
+              <input type="checkbox" name="botcheck" style="display: none" />
+
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                  <input type="text" name="firstName" required
+                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                  <input type="text" name="lastName" required
+                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input type="email" name="email" required
+                  class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                <input type="text" name="formSubject" required
+                  class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <textarea rows="5" name="message" required
+                  class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+              </div>
+
+              <button type="submit"
+                class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                Send Message
+              </button>
+            </form>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="space-y-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
+              <div class="space-y-6">
+                <div class="flex items-start">
+                  <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="ri-map-pin-line text-xl text-indigo-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">Address</h3>
+                    <p class="text-gray-600">
+                      123 Commerce Street<br />New Delhi, India 110001
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="ri-phone-line text-xl text-green-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">Phone</h3>
+                    <p class="text-gray-600">+91 6207536064</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                    <i class="ri-mail-line text-xl text-purple-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">Email</h3>
+                    <p class="text-gray-600">hello@xayra.com</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                Business Hours
+              </h2>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Monday - Friday</span>
+                  <span class="font-semibold text-gray-900">9:00 AM - 6:00 PM</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Saturday</span>
+                  <span class="font-semibold text-gray-900">10:00 AM - 4:00 PM</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Sunday</span>
+                  <span class="font-semibold text-gray-900">Closed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('./partials/footer') %>

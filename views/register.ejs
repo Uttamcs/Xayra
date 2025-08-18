@@ -1,77 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('./partials/header') %>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register | Bagistry</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<div class="w-full  bg-gradient-to-br from-purple-50 via-white to-indigo-50 flex items-center justify-center py-12 px-4">
+  <div class="card-elevated w-full max-w-lg p-8 relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-full -translate-y-16 -translate-x-16 opacity-50"></div>
+    <div class="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-pink-100 to-yellow-100 rounded-full translate-y-12 translate-x-12 opacity-50"></div>
+    
+    <div class="relative z-10">
+      <!-- Flash Messages -->
+      <% if (typeof success !== "undefined" && success.length > 0) { %>
+        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+          <div class="flex items-center">
+            <i class="ri-check-line text-green-600 mr-2"></i>
+            <span class="text-green-800 font-medium"><%= success %></span>
+          </div>
+        </div>
+      <% } %>
 
-<body class="bg-gray-900 flex items-center justify-center min-h-screen px-4">
+      <% if (typeof error !== "undefined" && error.length > 0) { %>
+        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+          <div class="flex items-center">
+            <i class="ri-error-warning-line text-red-600 mr-2"></i>
+            <span class="text-red-800 font-medium"><%= error %></span>
+          </div>
+        </div>
+      <% } %>
 
-  <div class="w-full max-w-sm space-y-4">
-    <!-- Flash Messages -->
-    <% if (success.length > 0) { %>
-      <div class="flash-msg bg-green-600 text-white text-sm font-medium px-4 py-2 rounded shadow-md">
-        <%= success %>
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <i class="ri-user-add-line text-2xl text-white"></i>
+        </div>
+        <h1 class="text-3xl font-black text-gray-900 mb-2">Join Xayra</h1>
+        <p class="text-gray-600">Create your account and start shopping</p>
       </div>
-    <% } %>
 
-    <% if (error.length > 0) { %>
-      <div class="flash-msg bg-red-600 text-white text-sm font-medium px-4 py-2 rounded shadow-md">
-        <%= error %>
-      </div>
-    <% } %>
-
-    <!-- Register Card -->
-    <div class="bg-white rounded-lg shadow-xl p-6 space-y-5">
-      <div class="text-center">
-        <h1 class="text-2xl font-bold text-blue-700">Welcome to Bagistry</h1>
-        <p class="text-sm text-gray-500">Create your account</p>
-      </div>
-
-      <form action="/users/register" method="POST" class="space-y-4">
+      <!-- Register Form -->
+      <form action="/users/register" method="POST" class="space-y-6">
         <div>
-          <label for="Fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
-          <input type="text" name="Fullname" id="Fullname" required
-            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label for="Fullname" class="form-label">Full Name</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="ri-user-line text-gray-400"></i>
+            </div>
+            <input type="text" name="Fullname" id="Fullname" 
+              class="form-input pl-10" 
+              placeholder="Enter your full name" 
+              required />
+          </div>
         </div>
 
         <div>
-          <label for="Email" class="block text-sm font-medium text-gray-700">Email</label>
-          <input type="email" name="Email" id="Email" required
-            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label for="Email" class="form-label">Email Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="ri-mail-line text-gray-400"></i>
+            </div>
+            <input type="email" name="Email" id="Email" 
+              class="form-input pl-10" 
+              placeholder="Enter your email" 
+              required />
+          </div>
         </div>
 
         <div>
-          <label for="Password" class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" name="Password" id="Password" required
-            class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label for="Password" class="form-label">Password</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="ri-lock-line text-gray-400"></i>
+            </div>
+            <input type="password" name="Password" id="Password" 
+              class="form-input pl-10" 
+              placeholder="Create a strong password" 
+              required />
+          </div>
         </div>
 
-        <button type="submit"
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition">
-          Register
+        <div class="flex items-center">
+          <input type="checkbox" id="terms" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" required>
+          <label for="terms" class="ml-2 text-sm text-gray-600">
+            I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-500">Terms of Service</a> and 
+            <a href="#" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full py-3 text-lg">
+          <i class="ri-user-add-line mr-2"></i>
+          Create Account
         </button>
       </form>
 
-      <p class="text-center text-sm text-gray-600">
-        Already have an account?
-        <a href="/users/login" class="text-blue-600 hover:underline">Login</a>
-      </p>
+      <!-- Divider -->
+      <div class="mt-8 mb-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-4 bg-white text-gray-500">Already have an account?</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login Link -->
+      <div class="text-center">
+        <a href="/users/login" class="btn btn-outline w-full py-3">
+          <i class="ri-login-box-line mr-2"></i>
+          Sign In Instead
+        </a>
+      </div>
     </div>
   </div>
+</div>
 
-  <script>
-    setTimeout(() => {
-      document.querySelectorAll('.flash-msg').forEach(msg => {
-        msg.style.opacity = '0';
-        msg.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => msg.remove(), 500);
-      });
-    }, 3000);
-  </script>
 </body>
-
-</html>

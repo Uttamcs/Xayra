@@ -1,32 +1,58 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const upload = require("../config/multer-config");
-const productModel = require('../models/product-model');
+const productModel = require("../models/product-model");
 
-router.get('/', (req, res) => {
-    res.send('Hey products');
+router.get("/", async (req, res) => {
+    try {
+        let products = await productModel.find();
+        res.render("admin-products", { products, users: null });
+    } catch (error) {
+        req.flash("error", "Unable to fetch products");
+        res.redirect("/owners/admin");
+    }
 });
 
+router.get("/create", function (req, res) {
+    let success = req.flash("success");
+    let error = req.flash("error");
+    res.render("createproducts", { success, error, users: null });
+});
 
-router.post('/create', upload.single('image'), async (req, res) => {
+router.post("/create", upload.single("image"), async (req, res) => {
     try {
-        let { name, price, discount, bgcolor, panelcolor, textcolor } =
-          req.body;
+        let { name, price, brand, color, discount } = req.body;
 
         let product = await productModel.create({
-          image: req.file.buffer,
-          name,
-          price,
-          discount,
-          bgcolor,
-          panelcolor,
-          textcolor,
+            image: req.file.buffer,
+            brand: capitalizeWords(brand),
+            color: capitalizeWords(color),
+            name: capitalizeWords(name),
+            price: price,
+            discount: discount,
         });
-        req.flash('success', 'Product created successfully');
-        res.redirect('/owners/admin');
+        req.flash("success", "Product created successfully");
+        res.redirect("/products");
     } catch (error) {
-        req.flash('error', error.message);
-        return res.redirect('/products/create');
+        req.flash("error", "Unable to add...\n Something went Wrong");
+        return res.redirect("/products/create");
     }
-})
+});
+
+router.delete("/delete/:id", async (req, res) => {
+    try {
+        await productModel.findByIdAndDelete(req.params.id);
+        res.json({ success: true });
+    } catch (error) {
+        res.json({ success: false, error: error.message });
+    }
+});
+
+function capitalizeWords(str) {
+    return str.replace(
+        /\w\S*/g,
+        (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+    );
+}
+
 module.exports = router;
