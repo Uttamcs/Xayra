@@ -1,5 +1,5 @@
 {
-  "name": "bag-shop",
+  "name": "Xayra",
   "version": "1.0.0",
   "description": "Bag Shop App - Express + EJS + MongoDB",
   "license": "ISC",
@@ -7,9 +7,9 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",        // Production start (used by Vercel or Node)
-    "dev": "nodemon index.js",       // Local development with nodemon
-    "build": "npm install",          // Build step for Vercel
+    "start": "node app.js",       
+    "dev": "nodemon app.js",       
+    "build": "npm install",          
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
