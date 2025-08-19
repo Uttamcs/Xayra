@@ -8,9 +8,23 @@ const userModel = require("../models/user-model");
 dotenv.config();
 
 
-router.get('/register', (req, res) => res.render('register', { users: null, loggedIn: false }));
+router.get('/register', (req, res) => {
+  res.render('register', { 
+    users: null, 
+    loggedIn: false,
+    error: req.flash('error'),
+    success: req.flash('success')
+  });
+});
 router.post("/register", registerUser);
-router.get('/login', (req, res) => res.render('login', { users: null, loggedIn: false }));
+router.get('/login', (req, res) => {
+  res.render('login', { 
+    users: null, 
+    loggedIn: false,
+    error: req.flash('error'),
+    success: req.flash('success')
+  });
+});
 router.post("/login", loginUser);
 router.get('/logout', (req, res) => res.render('login', { users: null, loggedIn: false }));
 router.post('/logout', logout);

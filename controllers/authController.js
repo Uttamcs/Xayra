@@ -11,14 +11,19 @@ let registerUser = async (req, res) => {
     let { Fullname, Email, Password } = req.body;
     let user = await userModel.findOne({ Email });
     if (user) {
-        return res.render('register', { users: null, loggedIn: false, error: 'User already exists' });
+        req.flash('error', 'User already exists with this email');
+        return res.redirect('/users/register');
     }
     if (!Fullname || !Email || !Password) {
-      return res.status(400).send("Please fill all the fields");
+      req.flash('error', 'Please fill all the fields');
+      return res.redirect('/users/register');
     }
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(Password, salt, async function (err, hash) {
-        if (err) return res.status(500).send("Error hashing password");
+        if (err) {
+          req.flash('error', 'Error creating account');
+          return res.redirect('/users/register');
+        }
 
         let newUser = await userModel.create({
           Fullname,
@@ -28,11 +33,13 @@ let registerUser = async (req, res) => {
 
         const token = generateToken(newUser);
         res.cookie("token", token);
-        return res.status(201).send("User registered successfully");
+        req.flash('success', 'Account created successfully!');
+        return res.redirect('/shop');
       });
     });
   } catch (err) {
-    res.status(500).send(err.message);
+    req.flash('error', 'Registration failed');
+    res.redirect('/users/register');
   }
 };
 
@@ -43,11 +50,18 @@ let loginUser = async (req, res) => {
         
         let user = await userModel.findOne({ Email });
         if (!user) {
-            return res.render('login', { users: null, loggedIn: false, error: 'No user found' });
+            req.flash('error', 'No user found with this email');
+            return res.redirect('/users/login');
         }
         bcrypt.compare(Password, user.Password, function (err, result) {
-          if (err) return res.render('login', { users: null, loggedIn: false, error: 'Something went wrong' });
-          if (!result) return res.render('login', { users: null, loggedIn: false, error: 'Invalid credentials' });
+          if (err) {
+            req.flash('error', 'Something went wrong');
+            return res.redirect('/users/login');
+          }
+          if (!result) {
+            req.flash('error', 'Invalid credentials');
+            return res.redirect('/users/login');
+          }
           const token = generateToken(user);
           res.cookie("token", token);
           req.session.user = user; 
@@ -57,7 +71,8 @@ let loginUser = async (req, res) => {
 
     }
     catch (err) {
-        res.status(500).send(err.message);
+        req.flash('error', 'Login failed');
+        res.redirect('/users/login');
     }
 }
 
