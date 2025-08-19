@@ -3,23 +3,32 @@ const router = express.Router();
 const upload = require("../config/multer-config");
 const productModel = require("../models/product-model");
 
-router.get("/", async (req, res) => {
+// Admin authentication middleware
+function isAdmin(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/owners/login');
+    }
+}
+
+router.get("/", isAdmin, async (req, res) => {
     try {
         let products = await productModel.find();
-        res.render("admin-products", { products, users: null });
+        res.render("admin-products", { products, users: req.session.user, isAdmin: true });
     } catch (error) {
         req.flash("error", "Unable to fetch products");
         res.redirect("/owners/admin");
     }
 });
 
-router.get("/create", function (req, res) {
+router.get("/create", isAdmin, function (req, res) {
     let success = req.flash("success");
     let error = req.flash("error");
-    res.render("createproducts", { success, error, users: null });
+    res.render("createproducts", { success, error, users: req.session.user, isAdmin: true });
 });
 
-router.post("/create", upload.single("image"), async (req, res) => {
+router.post("/create", isAdmin, upload.single("image"), async (req, res) => {
     try {
         let { name, price, brand, color, discount } = req.body;
 
@@ -39,7 +48,7 @@ router.post("/create", upload.single("image"), async (req, res) => {
     }
 });
 
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", isAdmin, async (req, res) => {
     try {
         await productModel.findByIdAndDelete(req.params.id);
         res.json({ success: true });

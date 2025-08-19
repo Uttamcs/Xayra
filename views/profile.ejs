@@ -1,6 +1,6 @@
 <%- include('./partials/header') %>
 
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Header -->
@@ -138,13 +138,22 @@
       <div class="border-t pt-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <a href="/users/cart/<%= users && users._id ? users._id : '' %>" 
              class="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
             <i class="ri-shopping-cart-line text-2xl text-indigo-600 mr-3"></i>
             <div>
               <h3 class="font-semibold text-gray-900">My Cart</h3>
               <p class="text-sm text-gray-600">View cart items</p>
+            </div>
+          </a>
+          
+          <a href="/orders" 
+             class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+            <i class="ri-file-list-line text-2xl text-purple-600 mr-3"></i>
+            <div>
+              <h3 class="font-semibold text-gray-900">All Orders</h3>
+              <p class="text-sm text-gray-600">Order history</p>
             </div>
           </a>
           

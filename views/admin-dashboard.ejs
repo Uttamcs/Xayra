@@ -1,0 +1,230 @@
+<%- include('./partials/header') %>
+
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
+  <!-- Flash Messages -->
+  <% if (success && success.length > 0) { %>
+    <div class="flash-msg bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg mx-auto mt-4 max-w-md text-center">
+      <%= success[0] %>
+    </div>
+  <% } %>
+
+  <% if (error && error.length > 0) { %>
+    <div class="flash-msg bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg mx-auto mt-4 max-w-md text-center">
+      <%= error[0] %>
+    </div>
+  <% } %>
+
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p class="text-gray-600">Welcome back, <%= users ? users.Fullname : 'Admin' %></p>
+        </div>
+        <div class="flex space-x-3">
+          <a href="/products/create" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            <i class="ri-add-line mr-2"></i>Add Product
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="p-3 bg-blue-100 rounded-lg">
+            <i class="ri-user-line text-2xl text-blue-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Total Users</p>
+            <p class="text-2xl font-bold text-gray-900"><%= stats.totalUsers %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="p-3 bg-green-100 rounded-lg">
+            <i class="ri-shopping-bag-line text-2xl text-green-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Products</p>
+            <p class="text-2xl font-bold text-gray-900"><%= stats.totalProducts %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="p-3 bg-purple-100 rounded-lg">
+            <i class="ri-file-list-line text-2xl text-purple-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Total Orders</p>
+            <p class="text-2xl font-bold text-gray-900"><%= stats.totalOrders %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="p-3 bg-yellow-100 rounded-lg">
+            <i class="ri-time-line text-2xl text-yellow-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Pending</p>
+            <p class="text-2xl font-bold text-gray-900"><%= stats.pendingOrders %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center">
+          <div class="p-3 bg-emerald-100 rounded-lg">
+            <i class="ri-money-rupee-circle-line text-2xl text-emerald-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Revenue</p>
+            <p class="text-2xl font-bold text-gray-900">₹<%= stats.totalRevenue.toLocaleString() %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Quick Actions -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <div class="space-y-3">
+          <a href="/products/create" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+            <i class="ri-add-circle-line text-blue-600 text-xl mr-3"></i>
+            <span class="text-gray-700">Add New Product</span>
+          </a>
+          <a href="/products" class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition">
+            <i class="ri-shopping-bag-line text-green-600 text-xl mr-3"></i>
+            <span class="text-gray-700">Manage Products</span>
+          </a>
+          <a href="/owners/orders" class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
+            <i class="ri-file-list-line text-purple-600 text-xl mr-3"></i>
+            <span class="text-gray-700">View All Orders</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Recent Orders</h3>
+          <a href="/owners/orders" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All</a>
+        </div>
+        
+        <% if (recentOrders && recentOrders.length > 0) { %>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Order ID</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Customer</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Date</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Status</th>
+                  <th class="text-left py-3 px-2 text-sm font-medium text-gray-600">Payment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentOrders.forEach(order => { %>
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                  <td class="py-3 px-2 text-sm text-gray-900">#<%= order._id.toString().slice(-6) %></td>
+                  <td class="py-3 px-2">
+                    <div class="text-sm text-gray-900"><%= order.customerName %></div>
+                    <div class="text-xs text-gray-500"><%= order.customerEmail %></div>
+                  </td>
+                  <td class="py-3 px-2">
+                    <div class="text-sm text-gray-900"><%= new Date(order.date).toLocaleDateString() %></div>
+                    <div class="text-xs text-gray-500"><%= new Date(order.date).toLocaleTimeString() %></div>
+                  </td>
+                  <td class="py-3 px-2">
+                    <span class="px-2 py-1 text-xs rounded-full <%= 
+                      order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
+                      order.status === 'Paid' ? 'bg-green-100 text-green-800' : 
+                      order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' : 
+                      order.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' :
+                      'bg-gray-100 text-gray-800' %>">
+                      <%= order.status %>
+                    </span>
+                  </td>
+                  <td class="py-3 px-2 text-sm text-gray-600">
+                    <span class="capitalize"><%= order.paymentMethod %></span>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="text-center py-8">
+            <i class="ri-file-list-line text-4xl text-gray-300 mb-2"></i>
+            <p class="text-gray-500">No recent orders</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Order Status Distribution -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Status Overview</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Pending Orders</span>
+            <span class="font-semibold text-yellow-600"><%= stats.pendingOrders %></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Completed Orders</span>
+            <span class="font-semibold text-green-600"><%= stats.totalOrders - stats.pendingOrders %></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Total Revenue</span>
+            <span class="font-semibold text-blue-600">₹<%= stats.totalRevenue.toLocaleString() %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Info -->
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">System Information</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Admin Panel Version</span>
+            <span class="font-semibold text-gray-900">v1.0.0</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Last Login</span>
+            <span class="font-semibold text-gray-900"><%= new Date().toLocaleDateString() %></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Status</span>
+            <span class="font-semibold text-green-600">Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Flash Auto Dismiss Script -->
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('.flash-msg').forEach(el => {
+      el.style.opacity = '0';
+      setTimeout(() => el.style.display = 'none', 300);
+    });
+  }, 4000);
+</script>
+
+<%- include('./partials/footer') %>

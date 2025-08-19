@@ -1,6 +1,6 @@
 <%- include('./partials/header') %>
 
-<div class="min-h-screen flex flex-col bg-gray-50">
+<div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
 
   <!-- Flash Messages -->
   <% if (success && success.length > 0) { %>
@@ -19,9 +19,11 @@
     
     <!-- Sidebar -->
     <aside class="w-[22%] pr-6 border-r border-gray-200 hidden md:flex flex-col space-y-4">
-      <h3 class="text-lg font-semibold text-gray-700 mb-2">Menu</h3>
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Admin Menu</h3>
       <a class="text-blue-600 hover:text-blue-800 font-medium" href="/products">📦 All Products</a>
       <a class="text-blue-600 hover:text-blue-800 font-medium" href="/products/create">➕ Create Product</a>
+      <a class="text-blue-600 hover:text-blue-800 font-medium" href="/owners/orders">📋 All Orders</a>
+      <a class="text-red-600 hover:text-red-800 font-medium" href="/owners/logout">🚪 Logout</a>
     </aside>
 
     <!-- Main Content -->
@@ -55,6 +57,41 @@
           </button>
         </div>
       </form>
+
+      <!-- Recent Orders Section -->
+      <% if (typeof recentOrders !== 'undefined' && recentOrders.length > 0) { %>
+      <div class="mt-12 border-t pt-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">📋 Recent Orders</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full bg-white border border-gray-200 rounded-lg">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Order ID</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Customer</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Payment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recentOrders.forEach(order => { %>
+              <tr class="border-t">
+                <td class="px-4 py-3 text-sm text-gray-900">#<%= order._id.toString().slice(-6) %></td>
+                <td class="px-4 py-3 text-sm text-gray-900"><%= order.customerName %></td>
+                <td class="px-4 py-3 text-sm text-gray-600"><%= new Date(order.date).toLocaleDateString() %></td>
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full <%= order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' %>">
+                    <%= order.status %>
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-600"><%= order.paymentMethod %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <% } %>
     </main>
   </div>
 </div>

@@ -8,11 +8,11 @@ const userModel = require("../models/user-model");
 dotenv.config();
 
 
-router.get('/register', (req, res) => res.render('register'));
+router.get('/register', (req, res) => res.render('register', { users: null, loggedIn: false }));
 router.post("/register", registerUser);
-router.get('/login', (req, res) => res.render('login'));
+router.get('/login', (req, res) => res.render('login', { users: null, loggedIn: false }));
 router.post("/login", loginUser);
-router.get('/logout', (req, res) => res.render('login'));
+router.get('/logout', (req, res) => res.render('login', { users: null, loggedIn: false }));
 router.post('/logout', logout);
 router.post("/cart/add/:productId", isLoggedIn, async (req, res) => {
   try {
@@ -32,7 +32,6 @@ router.post("/cart/add/:productId", isLoggedIn, async (req, res) => {
     await user.save();
     res.json({ success: true, message: "Product added to cart" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 });
@@ -64,7 +63,6 @@ router.get("/cart/:id", isLoggedIn, async (req, res) => {
     
     res.render("cart", { cart: populatedCart, users: user, loggedIn: !!req.user });
   } catch (err) {
-    console.error(err);
     res.status(500).send("Server Error");
   }
 });
@@ -89,7 +87,6 @@ router.post("/cart/update/:productId", isLoggedIn, async (req, res) => {
     }
     res.redirect("/users/cart/" + req.user._id);
   } catch (err) {
-    console.error(err);
     res.redirect("/users/cart/" + req.user._id);
   }
 });
@@ -105,7 +102,6 @@ router.post("/cart/remove/:productId", isLoggedIn, async (req, res) => {
     await user.save();
     res.redirect("/users/cart/" + req.user._id);
   } catch (err) {
-    console.error(err);
     res.redirect("/users/cart/" + req.user._id);
   }
 });

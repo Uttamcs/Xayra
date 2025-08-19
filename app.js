@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser');
 const path = require('path');
+require('dotenv').config();
 const db = require('./config/mongoose-connection');
 const usersRouter = require('./routes/usersRouter');
 const ownersRouter = require('./routes/ownersRouter');
@@ -12,7 +13,7 @@ const flash = require("connect-flash");
 
 app.use(
   session({
-    secret: "your_secret_key", 
+    secret: process.env.JWT_KEY, 
     resave: false,
     saveUninitialized: true,
   })
@@ -41,7 +42,6 @@ app.use('/users', usersRouter);
 app.use('/owners', ownersRouter);
 app.use('/products', productsRouter);
 
-app.listen(3000, () => {
-  console.log(`http://localhost:3000`);
-  console.log("Server is running on port 3000");
-});
+
+
+app.listen(3000);

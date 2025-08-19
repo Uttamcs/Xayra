@@ -17,6 +17,11 @@ let confirmOrder = async (req, res) => {
     let user = await userModel.findById(req.user._id);
     if (!user) return res.status(404).send("User not found");
 
+    // Initialize orders array if it doesn't exist
+    if (!user.orders) {
+      user.orders = [];
+    }
+    
     // Create order object
     const order = {
       _id: new Date().getTime().toString(),
@@ -27,7 +32,8 @@ let confirmOrder = async (req, res) => {
       city: req.body.city,
       pincode: req.body.pincode,
       paymentMethod: req.body.paymentMethod,
-      status: "Pending",
+      deliveryTime: req.body.deliveryTime || 'anytime',
+      status: req.body.paymentStatus || "Pending",
       date: new Date()
     };
     
@@ -43,7 +49,6 @@ let confirmOrder = async (req, res) => {
     
     res.redirect("/success");
   } catch (err) {
-    console.error(err);
     res.status(500).send("Server Error");
   }
 };

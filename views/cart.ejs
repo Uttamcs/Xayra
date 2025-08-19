@@ -1,6 +1,6 @@
 <%- include("./partials/header") %>
 
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Header -->
@@ -55,7 +55,7 @@
                       <!-- Price -->
                       <div class="mt-2">
                         <span class="text-xl font-bold text-indigo-600">
-                          ₹ <%= item.product.price - (item.product.price * (item.product.discount || 0) / 100) %>
+                          ₹ <%= (item.product.price - (item.product.price * (item.product.discount || 0) / 100)).toFixed(2) %>
                         </span>
                         <% if (item.product.discount > 0) { %>
                           <span class="text-sm text-gray-500 line-through ml-2">
@@ -99,7 +99,7 @@
                       <div class="text-right">
                         <p class="text-sm text-gray-500">Subtotal</p>
                         <p class="text-lg font-semibold text-gray-900" id="subtotal-<%= item.product._id %>">
-                          ₹ <%= (item.product.price - (item.product.price * (item.product.discount || 0) / 100)) * (item.quantity || 1) %>
+                          ₹ <%= ((item.product.price - (item.product.price * (item.product.discount || 0) / 100)) * (item.quantity || 1)).toFixed(2) %>
                         </p>
                       </div>
                     </div>
@@ -171,7 +171,7 @@
           <h2 class="text-3xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
           <p class="text-xl text-gray-600 mb-10 leading-relaxed">Looks like you haven't added any items to your cart yet. Discover our amazing collection!</p>
           <a href="/shop" class="btn btn-primary text-lg px-8 py-4">
-            <i class="ri-shopping-bag-line mr-2"></i>
+            <i class="ri-shopping-cart-line mr-2"></i>
             Start Shopping
           </a>
         </div>

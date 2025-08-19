@@ -1,18 +1,19 @@
 const mongoose = require("mongoose");
-const dbgr = require("debug")("development:mongoose");
-const config = require("config");
+require('dotenv').config();
 
-mongoose
-  .connect(`${config.get("MONGODB_URI")}Bagistry`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(function () {
-    dbgr("Database connected");
-  })
-  .catch(function (err) {
-    dbgr(err);
-  });
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log(`✅ MongoDB Connected`);
+  } catch (error) {
+    console.error("MongoDB connection error:", error.message);
+    process.exit(1);
+  }
+};
 
+connectDB();
 
 module.exports = mongoose.connection;

@@ -11,8 +11,7 @@ let registerUser = async (req, res) => {
     let { Fullname, Email, Password } = req.body;
     let user = await userModel.findOne({ Email });
     if (user) {
-        req.flash("error", "User already exists");
-        return res.redirect("/users/register");
+        return res.render('register', { users: null, loggedIn: false, error: 'User already exists' });
     }
     if (!Fullname || !Email || !Password) {
       return res.status(400).send("Please fill all the fields");
@@ -44,11 +43,11 @@ let loginUser = async (req, res) => {
         
         let user = await userModel.findOne({ Email });
         if (!user) {
-            return res.status(400).send("No user found");
+            return res.render('login', { users: null, loggedIn: false, error: 'No user found' });
         }
         bcrypt.compare(Password, user.Password, function (err, result) {
-          if (err) return res.status(500).send("Something went wrong");
-          if (!result) return res.status(400).send("Invalid credentials");
+          if (err) return res.render('login', { users: null, loggedIn: false, error: 'Something went wrong' });
+          if (!result) return res.render('login', { users: null, loggedIn: false, error: 'Invalid credentials' });
           const token = generateToken(user);
           res.cookie("token", token);
           req.session.user = user; 
@@ -66,7 +65,7 @@ let loginUser = async (req, res) => {
 let logout = (req, res) => {
   res.clearCookie('token');
   req.session.destroy((err) => {
-    if (err) return res.status(500).send("Logout failed.");
+    if (err) return res.render('login', { users: null, loggedIn: false, error: 'Logout failed' });
     res.redirect('/users/login');
   });
 };
