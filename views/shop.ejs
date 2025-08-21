@@ -12,17 +12,17 @@
     }
   </script>
   
-  <div class="w-full min-h-screen flex flex-col px-4 sm:px-6 lg:px-16 py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+  <div class="w-full min-h-screen flex flex-col px-2 sm:px-4 lg:px-8 xl:px-16 py-6 sm:py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
     
     <!-- Search Bar -->
-    <div class="mb-8">
+    <div class="mb-6 sm:mb-8">
       <div class="max-w-2xl mx-auto">
         <form action="/shop" method="GET" class="relative">
           <input type="text" name="search" value="<%= searchQuery %>" 
                  placeholder="Search products, brands, colors..." 
-                 class="w-full border-2 border-gray-200 rounded-xl px-6 py-4 pr-12 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white shadow-sm">
-          <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-indigo-600 transition-colors">
-            <i class="ri-search-line text-xl"></i>
+                 class="w-full border-2 border-gray-200 rounded-xl px-4 sm:px-6 py-3 sm:py-4 pr-10 sm:pr-12 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-white shadow-sm">
+          <button type="submit" class="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-indigo-600 transition-colors">
+            <i class="ri-search-line text-lg sm:text-xl"></i>
           </button>
           <% if (currentSort !== 'popular') { %>
             <input type="hidden" name="sortby" value="<%= currentSort %>">
@@ -34,71 +34,84 @@
       </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row gap-8">
+    <div class="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
       <!-- Sidebar -->
-      <aside class="w-full sm:w-80 flex-shrink-0">
-        <div class="card p-6 mb-6">
-          <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-            <i class="ri-sort-desc mr-2 text-indigo-600"></i>
-            Sort by
-          </h3>
-          <form action="/shop" method="GET" id="sortForm">
-            <select
-              class="w-full border border-gray-200 rounded-lg px-4 py-2.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-              name="sortby" onchange="document.getElementById('sortForm').submit()">
-              <option value="popular" <%= currentSort === 'popular' ? 'selected' : '' %>>Popular</option>
-              <option value="newest" <%= currentSort === 'newest' ? 'selected' : '' %>>Newest</option>
-              <option value="price-asc" <%= currentSort === 'price-asc' ? 'selected' : '' %>>Price: Low to High</option>
-              <option value="price-desc" <%= currentSort === 'price-desc' ? 'selected' : '' %>>Price: High to Low</option>
-            </select>
-            <% if (showDiscounted) { %>
-              <input type="hidden" name="discount" value="true">
-            <% } %>
-            <% if (searchQuery) { %>
-              <input type="hidden" name="search" value="<%= searchQuery %>">
-            <% } %>
-          </form>
+      <aside class="w-full lg:w-80 flex-shrink-0">
+        <!-- Mobile Filter Toggle -->
+        <div class="lg:hidden mb-4">
+          <button onclick="toggleFilters()" class="w-full card p-4 flex items-center justify-between text-gray-900 font-semibold">
+            <span class="flex items-center">
+              <i class="ri-filter-3-line mr-2 text-indigo-600"></i>
+              Filters & Sort
+            </span>
+            <i class="ri-arrow-down-s-line text-xl" id="filterToggle"></i>
+          </button>
         </div>
 
-      <div class="card p-6 mb-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-          <i class="ri-compass-3-line mr-2 text-indigo-600"></i>
-          Browse
-        </h3>
-        <ul class="space-y-3 text-gray-600">
-          <li>
-            <a href="/shop?sortby=newest" class="hover:text-indigo-600 font-medium <%= currentSort === 'newest' ? 'text-indigo-600' : '' %>">New Collection</a>
-          </li>
-          <li>
-            <a href="/shop" class="hover:text-indigo-600 font-medium <%= !showDiscounted && currentSort === 'popular' ? 'text-indigo-600' : '' %>">All Products</a>
-          </li>
-          <li>
-            <a href="/shop?discount=true" class="hover:text-indigo-600 font-medium <%= showDiscounted ? 'text-indigo-600' : '' %>">Discounted Products</a>
-          </li>
-        </ul>
-      </div>
+        <div id="filterPanel" class="hidden lg:block space-y-4 sm:space-y-6">
+          <div class="card p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
+              <i class="ri-sort-desc mr-2 text-indigo-600"></i>
+              Sort by
+            </h3>
+            <form action="/shop" method="GET" id="sortForm">
+              <select
+                class="w-full border border-gray-200 rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 bg-white text-gray-700 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                name="sortby" onchange="document.getElementById('sortForm').submit()">
+                <option value="popular" <%= currentSort === 'popular' ? 'selected' : '' %>>Popular</option>
+                <option value="newest" <%= currentSort === 'newest' ? 'selected' : '' %>>Newest</option>
+                <option value="price-asc" <%= currentSort === 'price-asc' ? 'selected' : '' %>>Price: Low to High</option>
+                <option value="price-desc" <%= currentSort === 'price-desc' ? 'selected' : '' %>>Price: High to Low</option>
+              </select>
+              <% if (showDiscounted) { %>
+                <input type="hidden" name="discount" value="true">
+              <% } %>
+              <% if (searchQuery) { %>
+                <input type="hidden" name="search" value="<%= searchQuery %>">
+              <% } %>
+            </form>
+          </div>
 
-      <div class="card p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-          <i class="ri-filter-3-line mr-2 text-indigo-600"></i>
-          Filters
-        </h3>
-        <ul class="space-y-3 text-gray-600">
-          <li>
-            <a href="/shop" class="hover:text-indigo-600 font-medium <%= !showDiscounted ? 'text-indigo-600' : '' %>">All Items</a>
-          </li>
-          <li>
-            <a href="/shop?discount=true" class="hover:text-indigo-600 font-medium <%= showDiscounted ? 'text-indigo-600' : '' %>">On Sale</a>
-          </li>
-        </ul>
-      </div>
+          <div class="card p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
+              <i class="ri-compass-3-line mr-2 text-indigo-600"></i>
+              Browse
+            </h3>
+            <ul class="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600">
+              <li>
+                <a href="/shop?sortby=newest" class="hover:text-indigo-600 font-medium <%= currentSort === 'newest' ? 'text-indigo-600' : '' %>">New Collection</a>
+              </li>
+              <li>
+                <a href="/shop" class="hover:text-indigo-600 font-medium <%= !showDiscounted && currentSort === 'popular' ? 'text-indigo-600' : '' %>">All Products</a>
+              </li>
+              <li>
+                <a href="/shop?discount=true" class="hover:text-indigo-600 font-medium <%= showDiscounted ? 'text-indigo-600' : '' %>">Discounted Products</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
+              <i class="ri-filter-3-line mr-2 text-indigo-600"></i>
+              Filters
+            </h3>
+            <ul class="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600">
+              <li>
+                <a href="/shop" class="hover:text-indigo-600 font-medium <%= !showDiscounted ? 'text-indigo-600' : '' %>">All Items</a>
+              </li>
+              <li>
+                <a href="/shop?discount=true" class="hover:text-indigo-600 font-medium <%= showDiscounted ? 'text-indigo-600' : '' %>">On Sale</a>
+              </li>
+            </ul>
+          </div>
+        </div>
     </aside>
 
       <!-- Product Grid -->
       <section class="flex-1 min-w-0">
         <% if (searchQuery) { %>
-          <div class="mb-6">
-            <p class="text-gray-600">Search results for "<span class="font-semibold text-gray-900"><%= searchQuery %></span>" (<%= products.length %> products found)</p>
+          <div class="mb-4 sm:mb-6">
+            <p class="text-sm sm:text-base text-gray-600">Search results for "<span class="font-semibold text-gray-900"><%= searchQuery %></span>" (<%= products.length %> products found)</p>
             <a href="/shop" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
               <i class="ri-close-line mr-1"></i>Clear search
             </a>
@@ -106,26 +119,26 @@
         <% } %>
         
         <% if (products.length === 0) { %>
-          <div class="text-center py-16">
-            <i class="ri-search-line text-6xl text-gray-300 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">No products found</h3>
-            <p class="text-gray-600 mb-6">Try adjusting your search or filters</p>
+          <div class="text-center py-12 sm:py-16">
+            <i class="ri-search-line text-4xl sm:text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-lg sm:text-xl font-semibold text-gray-700 mb-2">No products found</h3>
+            <p class="text-sm sm:text-base text-gray-600 mb-6">Try adjusting your search or filters</p>
             <a href="/shop" class="btn btn-primary">
               <i class="ri-refresh-line mr-2"></i>
               View All Products
             </a>
           </div>
         <% } else { %>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
       <% products.forEach(function(product) { %>
-        <div class="product-card h-[440px] flex flex-col group">
+        <div class="product-card h-auto sm:h-[440px] flex flex-col group">
           <!-- Product Image -->
           <a href="/shop/<%= product._id %>" class="block">
-            <div class="product-image w-full h-48 bg-gray-100 flex items-center justify-center overflow-hidden p-3 relative">
+            <div class="product-image w-full h-40 sm:h-48 bg-gray-100 flex items-center justify-center overflow-hidden p-2 sm:p-3 relative">
               <img class="h-full w-full object-contain rounded-lg"
                 src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>" />
               <% if(product.discount > 0) { %>
-                <div class="discount-badge">
+                <div class="discount-badge text-xs sm:text-sm">
                   <%= product.discount %>% OFF
                 </div>
               <% } %>
@@ -133,46 +146,47 @@
           </a>
 
           <!-- Product Details -->
-          <div class="flex-1 flex flex-col gap-3 p-6">
+          <div class="flex-1 flex flex-col gap-2 sm:gap-3 p-3 sm:p-6">
             <% if(product.brand) { %>
-              <p class="text-sm text-gray-500 font-medium uppercase tracking-wide">
+              <p class="text-xs sm:text-sm text-gray-500 font-medium uppercase tracking-wide">
                 <%= product.brand %>
               </p>
             <% } %>
             <a href="/shop/<%= product._id %>" class="block">
-              <h3 class="text-base font-bold text-gray-900 line-clamp-2 group-hover:text-indigo-600 transition-colors">
+              <h3 class="text-sm sm:text-base font-bold text-gray-900 line-clamp-2 group-hover:text-indigo-600 transition-colors">
                 <%= product.name %>
               </h3>
             </a>
 
             <% if(product.color) { %>
-              <p class="text-sm text-gray-500 flex items-center">
-                <span class="w-3 h-3 rounded-full bg-gray-400 mr-2"></span>
+              <p class="text-xs sm:text-sm text-gray-500 flex items-center">
+                <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gray-400 mr-2"></span>
                 <%= product.color %>
               </p>
             <% } %>
 
-            <div class="flex items-center gap-2 mt-2">
-              <p class="text-xl font-black text-indigo-600">
+            <div class="flex items-center gap-2 mt-1 sm:mt-2">
+              <p class="text-lg sm:text-xl font-black text-indigo-600">
                 ₹ <%= (product.price - (product.price * product.discount / 100)).toFixed(2) %>
               </p>
               <% if(product.discount > 0) { %>
-                <p class="text-sm text-gray-500 line-through">
+                <p class="text-xs sm:text-sm text-gray-500 line-through">
                   ₹ <%= product.price %>
                 </p>
               <% } %>
             </div>
 
-            <div class="mt-auto flex gap-3 pt-4">
+            <div class="mt-auto flex gap-2 sm:gap-3 pt-3 sm:pt-4">
               <a href="/shop/<%= product._id %>" class="flex-1">
-                <button class="btn btn-primary w-full text-sm py-2.5">
+                <button class="btn btn-primary w-full text-xs sm:text-sm py-2 sm:py-2.5">
                   <i class="ri-eye-line mr-1"></i>
-                  View Details
+                  <span class="hidden sm:inline">View Details</span>
+                  <span class="sm:hidden">View</span>
                 </button>
               </a>
               <button onclick="addProduct('<%= product._id %>')" 
-                      class="btn btn-secondary px-3 py-2.5">
-                <i class="ri-shopping-cart-line"></i>
+                      class="btn btn-secondary px-2 sm:px-3 py-2 sm:py-2.5">
+                <i class="ri-shopping-cart-line text-sm sm:text-base"></i>
               </button>
             </div>
           </div>
@@ -185,21 +199,42 @@
   </div>
 
   <script>
+    function toggleFilters() {
+      const panel = document.getElementById('filterPanel');
+      const toggle = document.getElementById('filterToggle');
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        toggle.classList.add('rotate-180');
+      } else {
+        panel.classList.add('hidden');
+        toggle.classList.remove('rotate-180');
+      }
+    }
+
     function addProduct(productID){
       fetch(`/users/cart/add/${productID}`, {
         method: 'POST',
       })
-      .then(response => response.json())
+      .then(response => {
+        if (response.status === 401 || response.status === 403) {
+          alert('Please login to add items to cart');
+          window.location.href = '/users/login';
+          return;
+        }
+        return response.json();
+      })
       .then(data => {
-        if(data.success) {
+        if(data && data.success) {
           alert('Product added to cart!');
-        } else {
-          alert('Failed to add product to cart');
+        } else if(data) {
+          alert(data.message || 'Failed to add product to cart');
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('Error adding product to cart');
+        alert('Please login to add items to cart');
+        window.location.href = '/users/login';
       });
     }
   </script>

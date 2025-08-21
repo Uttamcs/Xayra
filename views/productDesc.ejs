@@ -37,11 +37,9 @@
 
       <!-- Buttons -->
       <div class="flex gap-4 mt-6">
-        <form action="/cart/add/<%= product._id %>" method="POST">
-          <button class="px-6 py-3 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600">
-            Add to Cart
-          </button>
-        </form>
+        <button onclick="addToCart('<%= product._id %>')" class="px-6 py-3 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600">
+          Add to Cart
+        </button>
 
         <form action="/checkout/<%= product._id %>" method="GET">
           <button class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700">
@@ -51,5 +49,36 @@
       </div>
     </div>
   </div>
+
+  <script>
+    async function addToCart(productId) {
+      try {
+        const response = await fetch(`/users/cart/add/${productId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.status === 401 || response.status === 403) {
+          alert('Please login to add items to cart');
+          window.location.href = '/users/login';
+          return;
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Product added to cart successfully!');
+        } else {
+          alert(result.message || 'Failed to add product to cart');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Please login to add items to cart');
+        window.location.href = '/users/login';
+      }
+    }
+  </script>
 
   <%- include('./partials/footer') %>
